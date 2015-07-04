@@ -6,6 +6,8 @@
 *.war
 *.ear
 
+# ignore Maven version backups
+pom.xml.versionsBackup
 # ignore Maven generated target folders
 ~
 target

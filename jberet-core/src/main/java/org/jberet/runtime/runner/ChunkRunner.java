@@ -570,6 +570,10 @@ public final class ChunkRunner extends AbstractRunner<StepContextImpl> implement
                     skipCount++;
                     outputList.clear();
 
+                    if (tm.getStatus() != Status.STATUS_ACTIVE) {
+                        tm.rollback();
+                    }
+                    
                     //during normal processing, upon a skippable exception in writer that is not configured to be
                     //retryable at the same time (i.e., the exception resolved to skip), skip all items in the chunk,
                     //and on to a new chunk

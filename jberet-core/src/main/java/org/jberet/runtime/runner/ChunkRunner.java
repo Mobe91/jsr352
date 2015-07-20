@@ -570,7 +570,7 @@ public final class ChunkRunner extends AbstractRunner<StepContextImpl> implement
                     skipCount++;
                     outputList.clear();
 
-                    if (tm.getStatus() != Status.STATUS_ACTIVE) {
+                    if (tm.getStatus() == Status.STATUS_MARKED_ROLLBACK) {
                         tm.rollback();
                     }
                     
@@ -622,16 +622,20 @@ public final class ChunkRunner extends AbstractRunner<StepContextImpl> implement
             safeClose();
             throw e;
         }
+        
+        tm.begin();
         try {
-            // Open the reader and writer
             itemReader.open(stepOrPartitionExecution.getReaderCheckpointInfo());
             processingInfo.readPosition = processingInfo.checkpointPosition;
             itemWriter.open(stepOrPartitionExecution.getWriterCheckpointInfo());
+            tm.commit();
         } catch (Exception e) {
+            tm.rollback();
             // An error occurred, safely close the reader and writer
             safeClose();
             throw e;
         }
+        
         processingInfo.chunkState = ChunkState.TO_RETRY;
         processingInfo.itemState = ItemState.RUNNING;
         if (collector != null) {

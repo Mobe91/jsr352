@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import javax.batch.api.chunk.CheckpointAlgorithm;
 import javax.batch.api.chunk.ItemProcessor;
 import javax.batch.api.chunk.ItemReader;
@@ -46,6 +47,7 @@ import org.jberet.runtime.AbstractStepExecution;
 import org.jberet.runtime.context.StepContextImpl;
 import org.jberet.runtime.metric.StepMetrics;
 import org.jboss.logging.Logger;
+import org.jboss.logging.Logger.Level;
 
 import static org.jberet._private.BatchLogger.LOGGER;
 import static org.jberet._private.BatchMessages.MESSAGES;
@@ -99,6 +101,10 @@ public final class ChunkRunner extends AbstractRunner<StepContextImpl> implement
     private final List<Object> outputList = new ArrayList<Object>();
 
     private final TransactionManager tm;
+    
+    static {
+    	LOGGER.log(Level.INFO, "Using Sweazer JBeret Patch");
+    }
 
     public ChunkRunner(final StepContextImpl stepContext,
                        final CompositeExecutionRunner enclosingRunner,

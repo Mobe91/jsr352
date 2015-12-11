@@ -62,9 +62,6 @@ import static org.jberet._private.BatchLogger.LOGGER;
 import static org.jberet._private.BatchMessages.MESSAGES;
 
 public final class StepExecutionRunner extends AbstractRunner<StepContextImpl> implements JobTask {
-	
-	public static final String ANALYZER_TX_PROPERTY = "org.jberet.transaction.analyzerTxDisabled";
-	
     Step step;
     private final List<StepListener> stepListeners = new ArrayList<StepListener>();
     Map<String, Class<?>> chunkRelatedListeners;
@@ -85,7 +82,7 @@ public final class StepExecutionRunner extends AbstractRunner<StepContextImpl> i
 
     final TransactionManager tm;
     final StepExecutionImpl stepExecution;
-    
+
     private boolean analyzerTxEnabled;
 
     public StepExecutionRunner(final StepContextImpl stepContext, final CompositeExecutionRunner enclosingRunner) {
@@ -98,11 +95,11 @@ public final class StepExecutionRunner extends AbstractRunner<StepContextImpl> i
         } else {
             tm = jobContext.getBatchEnvironment().getTransactionManager();
         }
-        
+
         if (step.getProperties() != null) {
-        	analyzerTxEnabled = !Boolean.parseBoolean(step.getProperties().get(ANALYZER_TX_PROPERTY));
+            analyzerTxEnabled = !Boolean.parseBoolean(step.getProperties().get(PropertyKey.ANALYZER_TX_DISABLED));
         }
-        
+
         createStepListeners();
         initPartitionConfig();
     }
